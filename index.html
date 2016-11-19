@@ -1,0 +1,71 @@
+---
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Process</title>
+	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: white;
+			display: block;
+			height: 2048px;
+		}
+
+		img {
+			height:100%;
+			position: fixed;
+			will-change: opacity;
+		}
+
+		main {
+			display: flex;
+			justify-content: center;
+		}
+	</style>
+</head>
+<body>
+{% comment %}
+	Images are sorted to guarantee that they'll be returned in the right order (since I'm not assuming that "where" will do that).
+{% endcomment %}
+{% assign images = site.static_files | where:"extname",".jpeg" | sort:"basename" %}
+<main id="images">
+	{% for image in images %}
+		<img id="img{{ forloop.index }}" style="z-index: {{ forloop.rindex }}" src="{{ image.path }}" />
+	{% endfor %}
+</main>
+<script>
+	var clamp = function(x, min, max) {
+		if (x < min) return min;
+		if (x > max) return max;
+		return x;
+	};
+
+	var computeOpacity = function(x, numImages, imageNumber) {
+		return (-Math.cos(Math.PI * clamp( ((x - (imageNumber / (numImages - 1))) + (1/numImages)) * numImages, 0, 2)) / 2.0) + 0.5;
+	};
+
+	var doc = $(document);
+
+	doc.ready(function() {
+		var scrollHeight = document.body.scrollHeight;
+		var images = $('img');
+		var numImages = images.length;
+
+		doc.scroll(function() {
+			var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body).scrollTop;
+			// The top of the user's view to the page (i.e. won't ever be at the bottom)
+
+			var fraction = scrollTop / (scrollHeight - window.innerHeight);
+
+			images.each(function(i, element) {
+				$(element).css('opacity', computeOpacity(fraction, numImages, i));
+			});
+		});
+	});
+</script>
+</body>
+</html>
