@@ -35,7 +35,7 @@
 {% assign images = site.static_files | where:"extname",".jpg" | sort:"basename" %}
 <main id="images">
 	{% for image in images %}
-		<img id="img{{ forloop.index }}" style="z-index: {{ forloop.rindex }}" src="{{ image.path }}" />
+		<img id="img{{ forloop.index }}" style="z-index: {{ forloop.rindex }}" src="{{ image.path | prepend:site.baseurl }}" />
 	{% endfor %}
 </main>
 <script>
