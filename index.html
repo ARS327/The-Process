@@ -50,8 +50,9 @@
 		return x;
 	};
 
+	// imageNumber is a 0-index
 	var computeOpacity = function(x, numImages, imageNumber) {
-		return (-Math.cos(Math.PI * clamp( ((x - (imageNumber / (numImages - 1))) + (1/numImages)) * numImages, 0, 2)) / 2.0) + 0.5;
+		return clamp(1 - (Math.pow(x - (imageNumber / (numImages - 1)), 2.25)) * Math.pow(numImages, 2), 0, 1);
 	};
 
 	var doc = $(document);
