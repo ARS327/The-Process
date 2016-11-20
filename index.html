@@ -51,11 +51,11 @@
 	var doc = $(document);
 
 	doc.ready(function() {
-		var scrollHeight = document.body.scrollHeight;
 		var images = $('img');
 		var numImages = images.length;
 
 		doc.scroll(function() {
+			var scrollHeight = document.body.scrollHeight;
 			var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body).scrollTop;
 			// The top of the user's view to the page (i.e. won't ever be at the bottom)
 
