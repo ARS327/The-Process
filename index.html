@@ -39,7 +39,7 @@
 	{% for image in images %}
 		<img id="img{{ forloop.index }}" style="z-index: {{ forloop.rindex }}" src="{{ image.path | remove_first:'/' }}" />
 	{% comment %}
-		First slash is removed so that image.path is made relative (otherwise it won't as a subdirectory of my domain)
+		First slash is removed so that image.path is made relative (otherwise it won't work as a subdirectory of my domain)
 	{% endcomment %}
 	{% endfor %}
 </main>
