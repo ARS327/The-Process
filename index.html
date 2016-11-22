@@ -4,75 +4,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>The Process</title>
-	<meta name="author" content="Jesse Talavera-Greenberg & Ranzi Tian"/>
-	<meta name="application-name" content="The Process"/>
-	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
-	<style>
-		body {
-			margin: 0;
-			padding: 0;
-			background-color: white;
-			display: block;
-			height: 500vh;
-		}
+  <title>The Process</title>
+  <meta name="author" content="Jesse Talavera-Greenberg & Ranzi Tian"/>
+  <meta name="application-name" content="The Process"/>
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: white;
+      display: block;
+      height: 500vh;
+    }
 
-		img {
-			height: 100vh;
-			position: fixed;
-			will-change: opacity;
-		}
+    img {
+      height: 100vh;
+      position: fixed;
+      will-change: opacity;
+    }
 
-		main {
-			display: flex;
-			justify-content: center;
-		}
-	</style>
+    main {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
 </head>
 <body>
 {% comment %}
-	Images are sorted to guarantee that they'll be returned in the right order,
-	since I'm not assuming that the "where" filter will do that.
+  Images are sorted to guarantee that they'll be returned in the right order,
+  since I'm not assuming that the "where" filter will do that.
 {% endcomment %}
 {% assign images = site.static_files | where:"extname",".jpg" | sort:"basename" %}
 <main id="images">
-	{% for image in images %}
-		<img id="img{{ forloop.index }}" style="z-index: {{ forloop.rindex }}" src="{{ image.path | remove_first:'/' }}" />
-	{% comment %}
-		First slash is removed so that image.path is made relative (otherwise it won't work as a subdirectory of my domain)
-	{% endcomment %}
-	{% endfor %}
+  {% for image in images %}
+    <img id="img{{ forloop.index }}" style="z-index: {{ forloop.rindex }}" src="{{ image.path | remove_first:'/' }}" />
+  {% comment %}
+    First slash is removed so that image.path is made relative (otherwise it won't work as a subdirectory of my domain)
+  {% endcomment %}
+  {% endfor %}
 </main>
 <script>
-	var clamp = function(x, min, max) {
-		if (x < min) return min;
-		if (x > max) return max;
-		return x;
-	};
+  var clamp = function(x, min, max) {
+    if (x < min) return min;
+    if (x > max) return max;
+    return x;
+  };
 
-	// imageNumber is a 0-index
-	var computeOpacity = function(x, numImages, imageNumber) {
-		return clamp(1 - (Math.pow(x - (imageNumber / (numImages - 1)), 2.25)) * Math.pow(numImages, 2), 0, 1);
-	};
+  // imageNumber is a 0-index
+  var computeOpacity = function(x, numImages, imageNumber) {
+    return clamp(1 - (Math.pow(x - (imageNumber / (numImages - 1)), 2.25)) * Math.pow(numImages, 2), 0, 1);
+  };
 
-	var doc = $(document);
+  var doc = $(document);
 
-	doc.ready(function() {
-		var images = $('img');
-		var numImages = images.length;
+  doc.ready(function() {
+    var images = $('img');
+    var numImages = images.length;
 
-		doc.scroll(function() {
-			var scrollHeight = document.body.scrollHeight;
-			var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body).scrollTop;
-			// The top of the user's view to the page (i.e. won't ever be at the bottom)
+    doc.scroll(function() {
+      var scrollHeight = document.body.scrollHeight;
+      var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body).scrollTop;
+      // The top of the user's view to the page (i.e. won't ever be at the bottom)
 
-			var fraction = scrollTop / (scrollHeight - window.innerHeight);
+      var fraction = scrollTop / (scrollHeight - window.innerHeight);
 
-			images.each(function(i, element) {
-				$(element).css('opacity', computeOpacity(fraction, numImages, i));
-			});
-		});
-	});
+      images.each(function(i, element) {
+        $(element).css('opacity', computeOpacity(fraction, numImages, i));
+      });
+    });
+  });
 </script>
 </body>
 </html>
